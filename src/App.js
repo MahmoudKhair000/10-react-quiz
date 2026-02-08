@@ -70,9 +70,9 @@ export default function App() {
 
   function fetchQuestions() {
     // local json-server API
+    // fetch("http://localhost:8000/questions")
     // online server API
-    // fetch("https://one0-react-quiz-api.onrender.com/questions")
-    fetch("http://localhost:8000/questions")
+    fetch("https://one0-react-quiz-api.onrender.com/questions")
       // Handle the response
       .then((res) => res.json())
       // Dispatch the data to the reducer
