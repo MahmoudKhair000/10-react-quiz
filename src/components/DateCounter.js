@@ -1,16 +1,16 @@
-import { useState, useReducer } from "react";
+import { useReducer } from "react";
 
-function countReducer(state, action) {
+function countReducer(dateState, action) {
   // return state + action;
   switch (action.process) {
     case "dec":
-      return { ...state, count: state.count - state.step };
+      return { ...dateState, count: dateState.count - dateState.step };
     case "inc":
-      return { ...state, count: state.count + state.step };
+      return { ...dateState, count: dateState.count + dateState.step };
     case "setCount":
-      return { ...state, count: action.payload };
+      return { ...dateState, count: action.payload };
     case "setStep":
-      return { ...state, step: action.payload };
+      return { ...dateState, step: action.payload };
     case "reset":
       return action.payload;
 
@@ -21,32 +21,37 @@ function countReducer(state, action) {
 
 function DateCounter() {
   const initialState = { count: 0, step: 1 };
-  const [state, dispatch] = useReducer(countReducer, initialState);
-  const { count, step } = state;
+
+  // using useReducer hook
+  const [dateState, dateDispatch] = useReducer(countReducer, initialState);
+  // destructuring the dateState
+  const { count, step } = dateState;
 
   const date = new Date();
   date.setDate(date.getDate() + count);
 
   const dec = function () {
-    dispatch({ process: "dec" });
+    // decrementing the count
+    dateDispatch({ process: "dec" });
   };
 
   const inc = function () {
-    dispatch({ process: "inc" });
+    // incrementing the count
+    dateDispatch({ process: "inc" });
   };
 
   const defineCount = function (e) {
     // setCount(Number(e.target.value));
-    dispatch({ process: "setCount", payload: Number(e.target.value) });
+    dateDispatch({ process: "setCount", payload: Number(e.target.value) });
   };
 
   const defineStep = function (e) {
     // setStep(Number(e.target.value));
-    dispatch({ process: "setStep", payload: Number(e.target.value) });
+    dateDispatch({ process: "setStep", payload: Number(e.target.value) });
   };
 
   const reset = function () {
-    dispatch({ process: "reset", payload: initialState });
+    dateDispatch({ process: "reset", payload: initialState });
   };
 
   return (
@@ -57,12 +62,14 @@ function DateCounter() {
           min="0"
           max="10"
           value={step}
+          // defining the step
           onChange={defineStep}
         />
         <span>{step}</span>
       </div>
 
       <div>
+        {/* controlling the date with buttons and input */}
         <button onClick={dec}>-</button>
         <input value={count} onChange={defineCount} />
         <button onClick={inc}>+</button>

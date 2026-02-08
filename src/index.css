@@ -18,8 +18,9 @@
 
 html {
   font-size: 62.5%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 body {
@@ -89,7 +90,7 @@ h4 {
   align-items: center;
 }
 
-.progress {
+.progress-container {
   margin-bottom: 4rem;
   display: grid;
   justify-content: space-between;
@@ -136,9 +137,16 @@ progress {
   transform: translateX(1.2rem);
 }
 
-.btn[disabled]:hover {
-  cursor: not-allowed;
+.btn-next {
+  transition: 0.5s all ease-in-out;
 }
+.btn-next[disabled] {
+  visibility: hidden;
+  opacity: 0;
+}
+/* .btn[disabled]:hover {
+  cursor: not-allowed;
+} */
 
 .btn-ui {
   float: right;
@@ -176,7 +184,7 @@ progress {
   color: var(--color-light);
   border-radius: 100px;
   text-align: center;
-  padding: 2rem 0;
+  padding: 2rem;
   font-size: 2rem;
   font-weight: 500;
   margin-bottom: 1.6rem;
@@ -211,14 +219,19 @@ progress {
   border: 2px solid var(--color-dark);
   padding: 1.35rem 2.8rem;
   border-radius: 100px;
+  /* use an SVG data-URI to control cursor pixel size (48x48) and hotspot at center */
+  cursor:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' style='transform: scale(0.5)' width='48' height='48'><text x='50%' y='50%' font-size='36' text-anchor='middle' dominant-baseline='middle'>⌛</text></svg>")
+      24 24,
+    auto;
+  /* CREDIT: https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
 }
 
-/* CREDIT: https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
 .loader {
   width: 50px;
   height: 24px;
-  background: radial-gradient(circle closest-side, currentColor 90%, #0000) 0%
-      50%,
+  background:
+    radial-gradient(circle closest-side, currentColor 90%, #0000) 0% 50%,
     radial-gradient(circle closest-side, currentColor 90%, #0000) 50% 50%,
     radial-gradient(circle closest-side, currentColor 90%, #0000) 100% 50%;
   background-size: calc(100% / 3) 12px;
@@ -228,16 +241,28 @@ progress {
 
 @keyframes loader {
   20% {
-    background-position: 0% 0%, 50% 50%, 100% 50%;
+    background-position:
+      0% 0%,
+      50% 50%,
+      100% 50%;
   }
   40% {
-    background-position: 0% 100%, 50% 0%, 100% 50%;
+    background-position:
+      0% 100%,
+      50% 0%,
+      100% 50%;
   }
   60% {
-    background-position: 0% 50%, 50% 100%, 100% 0%;
+    background-position:
+      0% 50%,
+      50% 100%,
+      100% 0%;
   }
   80% {
-    background-position: 0% 50%, 50% 50%, 100% 100%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      100% 100%;
   }
 }
 
