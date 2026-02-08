@@ -12,7 +12,7 @@ const initialState = {
   // 'loading' | 'error' | 'ready' | 'active' | 'finished'
   status: "loading",
   timer: 10 * 60,
-  currentQuestionIndex: 0,
+  currQIndex: 0,
   totalScore: 0,
   endingState: "",
 };
@@ -24,12 +24,12 @@ function reducer(state, action) {
     case "dataError":
       return { ...state, status: "error", error: action.payload };
     case "testStart":
-      return { ...state, status: "active" };
+      return { ...state, status: "active", currQIndex: 0 };
     case "nextQuestion":
-      if (state.currentQuestionIndex + 1 < state.questions.length) {
+      if (state.currQIndex + 1 < state.questions.length) {
         return {
           ...state,
-          currentQuestionIndex: state.currentQuestionIndex + 1,
+          currQIndex: state.currQIndex + 1,
         };
       } else {
         return {
@@ -41,8 +41,7 @@ function reducer(state, action) {
     case "rightAnswer":
       return {
         ...state,
-        totalScore:
-          state.totalScore + state.questions[state.currentQuestionIndex].points,
+        totalScore: state.totalScore + state.questions[state.currQIndex].points,
       };
     case "wrongAnswer":
       return { ...state };
@@ -52,10 +51,12 @@ function reducer(state, action) {
       return {
         ...state,
         status: "ready",
-        currentQuestionIndex: 0,
+        currQIndex: 0,
         totalScore: 0,
         endingState: "",
       };
+    // Reset timer
+    // Reset high score
     default:
       throw new Error("Unknown action type");
   }
@@ -63,11 +64,14 @@ function reducer(state, action) {
 
 export default function App() {
   const [
-    { questions, status, currentQuestionIndex, timer, totalScore, endingState },
+    { questions, status, currQIndex, timer, totalScore, endingState },
     testDispatch,
   ] = useReducer(reducer, initialState);
 
   function fetchQuestions() {
+    // local json-server API
+    // online server API
+    // fetch("https://one0-react-quiz-api.onrender.com/questions")
     fetch("http://localhost:8000/questions")
       // Handle the response
       .then((res) => res.json())
@@ -83,10 +87,11 @@ export default function App() {
   useEffect(() => {
     fetchQuestions();
   }, []);
-  // Log the current state just after it changes
-  useEffect(() => {
-    console.log({ questions, status, currentQuestionIndex, totalScore });
-  }, [questions, status, currentQuestionIndex, totalScore]);
+
+  // // Log the current state just after it changes
+  // useEffect(() => {
+  //   console.log({ questions, status, currQIndex, totalScore });
+  // }, [questions, status, currQIndex, totalScore]);
 
   return (
     <div className="app">
@@ -102,14 +107,14 @@ export default function App() {
         )}
         {status === "active" && (
           <QuestionBox
-            question={questions[currentQuestionIndex].question}
+            question={questions[currQIndex].question}
             qLength={questions.length}
-            qIndex={currentQuestionIndex}
-            answers={questions[currentQuestionIndex].options}
-            raIndex={questions[currentQuestionIndex].correctOption}
+            qIndex={currQIndex}
+            answers={questions[currQIndex].options}
+            raIndex={questions[currQIndex].correctOption}
             timer={timer}
             totalScore={totalScore}
-            maxScore={280}
+            maxPossibleScore={280}
             handleRight={() => testDispatch({ type: "rightAnswer" })}
             handleWrong={() => testDispatch({ type: "wrongAnswer" })}
             handleNext={() => testDispatch({ type: "nextQuestion" })}

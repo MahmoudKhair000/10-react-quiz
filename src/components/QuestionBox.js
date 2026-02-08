@@ -1,5 +1,9 @@
 import { useState } from "react";
 import Timer from "./Timer.js";
+import Options from "./Options.js";
+import Progress from "./Progress.js";
+import Footer from "./Footer.js";
+import NextButton from "./NextButton.js";
 
 function QuestionBox({
   question,
@@ -8,7 +12,7 @@ function QuestionBox({
   answers,
   raIndex,
   totalScore,
-  maxScore,
+  maxPossibleScore,
   timer,
   handleRight,
   handleWrong,
@@ -20,46 +24,27 @@ function QuestionBox({
 
   return (
     <>
-      <header className="progress-container">
-        <progress max={15} value={qIndex + 1} />
-
-        <p>
-          Question <strong>{qIndex + 1}</strong> / {15}
-        </p>
-
-        <p>
-          <strong>{totalScore}</strong> / {maxScore}
-        </p>
-      </header>
+      <Progress
+        answered={answered}
+        max={15}
+        qIndex={qIndex}
+        totalScore={totalScore}
+        maxPossibleScore={maxPossibleScore}
+      />
       <div className="question">
         <h4>{question}</h4>
-        <div className="options">
-          {answers.map((option, index) => (
-            <button
-              key={index}
-              disabled={answered}
-              className={`btn btn-option ${
-                selectedIndex === index ? "answer" : ""
-              } ${answered && index === raIndex ? "correct" : ""} ${
-                answered && index !== raIndex ? "wrong" : ""
-              }`}
-              onClick={() => {
-                // Drive visual state from React state instead of manipulating the DOM directly
-                setSelectedIndex(index);
-                setAnswered(true);
-                if (index === raIndex) {
-                  handleRight();
-                } else {
-                  handleWrong();
-                }
-              }}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+        <Options
+          answers={answers}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
+          setAnswered={setAnswered}
+          raIndex={raIndex}
+          handleRight={handleRight}
+          handleWrong={handleWrong}
+          answered={answered}
+        />
       </div>
-      <footer
+      <Footer
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -67,18 +52,15 @@ function QuestionBox({
         }}
       >
         <Timer timer={timer} handleClose={handleClose} />
-        <button
-          className="btn btn-ui btn-next"
-          disabled={!answered}
-          onClick={() => {
-            setAnswered(false);
-            setSelectedIndex(null);
-            handleNext();
-          }}
-        >
-          {qIndex + 1 < qLength ? "Next Question" : "Finish"}
-        </button>
-      </footer>
+        <NextButton
+          answered={answered}
+          setAnswered={setAnswered}
+          setSelectedIndex={setSelectedIndex}
+          handleNext={handleNext}
+          qIndex={qIndex}
+          qLength={qLength}
+        />
+      </Footer>
     </>
   );
 }

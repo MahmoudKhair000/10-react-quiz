@@ -1,15 +1,5 @@
-import { useEffect } from "react";
-
-export default function FinishScreen({ endingState, score, handleRestart }) {
-  const percentage = (score / 280) * 100;
-
-  const ls = localStorage;
-  const getHighscore = () => ls.getItem("highscore") || score;
-  const setHighscore = (score) => {
-    if (score > getHighscore()) ls.setItem("highscore", score);
-    else return;
-  };
-
+function FinishScreen({ endingState, score, handleRestart }) {
+  const percentage = Math.round((score / 280) * 100);
   function getEmoji() {
     let emoji;
     if (percentage === 100) emoji = "🥇";
@@ -20,27 +10,40 @@ export default function FinishScreen({ endingState, score, handleRestart }) {
     return emoji;
   }
 
-  useEffect(() => {
-    setHighscore(score);
-    // to ignore next line with comment
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [score]);
+  if (localStorage.getItem("highscore") < score) {
+    localStorage.setItem("highscore", score);
+  }
+
+  let highScore = localStorage.getItem("highscore");
 
   return (
     <div>
       {endingState === "answeredAll" && (
         <>
+          <h3 style={{ textAlign: "center" }}>
+            Congratulations! Thanks for playing!
+          </h3>
           <p className="result">
             <span>{getEmoji()}</span>
             Your final score is <span>{score}</span> out of
-            <span> 280 ({((score / 280) * 100).toFixed(2)}%)</span>
+            <span> 280 ({percentage}%)</span>
           </p>
-          <div className="highscore">(Highscore: {getHighscore()} points)</div>
+          <div className="highscore">(Highscore: {highScore} points)</div>
         </>
       )}
       {/* <div className="highscore">(Highscore: 100 points)</div> */}
       {endingState === "timeUp" && (
-        <div className="result">Time's up! Thanks for playing!</div>
+        <>
+          <h3 style={{ textAlign: "center" }}>
+            Time's up! Thanks for playing!
+          </h3>
+          <p className="result">
+            <span>{getEmoji()}</span>
+            Your final score is <span>{score}</span> out of
+            <span> 280 ({percentage}%)</span>
+          </p>
+          <div className="highscore">(Highscore: {highScore} points)</div>
+        </>
       )}
       <footer>
         <button className="btn btn-ui" onClick={() => handleRestart()}>
@@ -50,3 +53,5 @@ export default function FinishScreen({ endingState, score, handleRestart }) {
     </div>
   );
 }
+
+export default FinishScreen;

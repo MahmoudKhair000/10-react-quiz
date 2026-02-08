@@ -21,7 +21,11 @@ function Timer({ timer, handleClose }) {
     return () => clearInterval(intervalId);
   }, [timeLeft, handleClose]);
 
-  return <div className="timer">{formatTime(timeLeft)}</div>;
+  return (
+    <>
+      <div className="timer">{formatTime(timeLeft)}</div>
+    </>
+  );
 }
 
 export default Timer;
